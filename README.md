@@ -66,7 +66,3 @@ extract --tweet-id <tweet_id> --no-learnings --output thread_output.json
 # Get help
 extract --help
 ```
-
-## License
-
-MIT
