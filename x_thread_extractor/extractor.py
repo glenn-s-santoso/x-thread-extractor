@@ -53,11 +53,11 @@ def extract_and_analyze(
     Returns:
         Dictionary with thread data and optional learnings.
     """
-    # Extract the thread
+    # Extract the thread with the replies
     thread = extract_thread(tweet_id, x_bearer_token)
     
     # Get only the main thread tweets (no replies)
-    main_thread_tweets = thread.main_thread_only
+    main_thread_tweets = thread.sorted_and_cleaned_threads
     
     # Prepare the result
     result = {
@@ -81,9 +81,9 @@ def extract_and_analyze(
     
     # Generate learnings if requested
     if generate_learning:
-        learnings = generate_learnings(thread, openrouter_api_key)
-        result["learnings"] = learnings.learnings
-        result["learnings_generated_at"] = learnings.generated_at.isoformat()
+        llm_information = generate_learnings(thread, openrouter_api_key)
+        result["learnings"] = llm_information.learnings
+        result["learnings_generated_at"] = llm_information.generated_at.isoformat()
     
     return result
 

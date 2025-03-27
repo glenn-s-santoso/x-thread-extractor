@@ -1,7 +1,7 @@
 """API client for interacting with X (Twitter) API."""
 
 import os
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional
 
 import requests
 from dotenv import load_dotenv
@@ -47,13 +47,17 @@ class XApiClient:
         """
         url = f"{self.BASE_URL}/tweets/{tweet_id}"
         params = {
-            "tweet.fields": "author_id,conversation_id,created_at,in_reply_to_user_id,referenced_tweets",
+            "tweet.fields": "author_id,conversation_id,created_at,in_reply_to_user_id,referenced_tweets,public_metrics",
         }
         
         response = requests.get(url, headers=self._get_headers(), params=params)
         response.raise_for_status()
         
         data = response.json()
+
+        if "referenced_tweets" in data["data"] and data["data"]["referenced_tweets"]:
+            return self.get_tweet(data["data"]["conversation_id"])
+            
         return Tweet(**data["data"])
     
     def get_user(self, user_id: str) -> User:
@@ -86,31 +90,19 @@ class XApiClient:
         params = {
             "query": f"conversation_id:{conversation_id}",
             "max_results": 100,
-            "tweet.fields": "author_id,conversation_id,created_at,in_reply_to_user_id,referenced_tweets",
+            "tweet.fields": "author_id,conversation_id,created_at,in_reply_to_user_id,referenced_tweets,public_metrics",
         }
         
         tweets = []
-        next_token = None
         
-        # Paginate through results
-        while True:
-            if next_token:
-                params["next_token"] = next_token
-            
-            response = requests.get(url, headers=self._get_headers(), params=params)
-            response.raise_for_status()
-            
-            data = response.json()
-            
-            if "data" in data:
-                for tweet_data in data["data"]:
-                    tweets.append(Tweet(**tweet_data))
-            
-            # Check if there are more pages
-            if "next_token" in data.get("meta", {}):
-                next_token = data["meta"]["next_token"]
-            else:
-                break
+        response = requests.get(url, headers=self._get_headers(), params=params)
+        response.raise_for_status()
+        
+        data = response.json()
+        
+        if "data" in data:
+            for tweet_data in data["data"]:
+                tweets.append(Tweet(**tweet_data))
         
         return tweets
     
@@ -123,19 +115,24 @@ class XApiClient:
         Returns:
             Thread object containing all tweets in the thread.
         """
-        # Get the original tweet
+        # Get the original tweet to get the conversation ID
         original_tweet = self.get_tweet(tweet_id)
-        
-        # Get the author
-        author = self.get_user(original_tweet.author_id)
+        conversation_id = original_tweet.conversation_id
         
         # Get all tweets in the conversation
-        all_tweets = self.get_conversation_tweets(original_tweet.conversation_id)
+        all_tweets = self.get_conversation_tweets(conversation_id)
+        
+        # Make sure the original tweet is included in the list
+        if not any(tweet.id == original_tweet.id for tweet in all_tweets):
+            all_tweets.append(original_tweet)
+        
+        # Get the author of the original tweet
+        author = self.get_user(original_tweet.author_id)
         
         # Create and return the thread
         return Thread(
-            original_tweet_id=tweet_id,
-            conversation_id=original_tweet.conversation_id,
+            original_tweet_id=original_tweet.conversation_id,
+            conversation_id=conversation_id,
             author=author,
             tweets=all_tweets,
         )

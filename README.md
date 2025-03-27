@@ -15,7 +15,7 @@ A command-line tool to extract main threads from X (Twitter) conversations witho
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/x-thread-extractor.git
+git clone https://github.com/glenn-s-santoso/x-thread-extractor.git
 cd x-thread-extractor
 
 # Install dependencies with Poetry
@@ -58,13 +58,13 @@ OPENROUTER_API_KEY=your_openrouter_api_key
 
 ```bash
 # Extract a thread and generate learnings
-x-extract --tweet-id <tweet_id> --output thread_output.json
+extract --tweet-id <tweet_id> --output thread_output.json
 
 # Extract a thread without generating learnings
-x-extract --tweet-id <tweet_id> --no-learnings --output thread_output.json
+extract --tweet-id <tweet_id> --no-learnings --output thread_output.json
 
 # Get help
-x-extract --help
+extract --help
 ```
 
 ## License

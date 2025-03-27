@@ -40,4 +40,4 @@ ENV/
 
 # Output files
 *.json
-!example_output.json
+!example_output*.json
