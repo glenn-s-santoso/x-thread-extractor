@@ -1,0 +1,40 @@
+{
+  "thread_id": "1234567890123456789",
+  "conversation_id": "1234567890123456789",
+  "author": {
+    "id": "12345678",
+    "username": "example_user",
+    "name": "Example User"
+  },
+  "main_thread": [
+    {
+      "id": "1234567890123456789",
+      "text": "1/ This is the first tweet in my thread about an interesting topic. Let me share some thoughts with you all.",
+      "created_at": "2023-01-01T12:00:00Z"
+    },
+    {
+      "id": "1234567890123456790",
+      "text": "2/ Here's the second part of my thread. As you can see, this is a continuation of my thoughts without any replies.",
+      "created_at": "2023-01-01T12:01:00Z"
+    },
+    {
+      "id": "1234567890123456791",
+      "text": "3/ And here's the third part. Notice how this thread only includes my main posts, not any replies from others or even my replies to them.",
+      "created_at": "2023-01-01T12:02:00Z"
+    },
+    {
+      "id": "1234567890123456792",
+      "text": "4/ Finally, here's my conclusion. Thanks for reading this thread!",
+      "created_at": "2023-01-01T12:03:00Z"
+    }
+  ],
+  "total_tweets_in_thread": 4,
+  "learnings": [
+    "The author is sharing a structured thread on a specific topic",
+    "The thread consists of four connected tweets that build upon each other",
+    "The author uses numbering to help readers follow the sequence",
+    "The content demonstrates how thread extraction works by showing only main posts",
+    "The thread format allows for longer-form content that exceeds single tweet limits"
+  ],
+  "learnings_generated_at": "2023-01-02T15:30:45Z"
+}
