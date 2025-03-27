@@ -6,7 +6,7 @@ from typing import Dict, List, Optional
 import requests
 from dotenv import load_dotenv
 
-from x_thread_extractor.models import Tweet, User, Thread
+from src.models import Tweet, User, Thread
 
 # Load environment variables
 load_dotenv()

@@ -1,11 +1,11 @@
 """Thread extractor functionality."""
 
 import json
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, Optional, Any
 
-from x_thread_extractor.api import XApiClient
-from x_thread_extractor.llm import LLMClient
-from x_thread_extractor.models import Thread, ThreadLearnings
+from src.api import XApiClient
+from src.llm import LLMClient
+from src.models import Thread, ThreadLearnings
 
 
 def extract_thread(tweet_id: str, x_bearer_token: Optional[str] = None) -> Thread:

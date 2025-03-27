@@ -1,12 +1,12 @@
 """LLM client for generating key learnings from threads."""
 
 import os
-from typing import List, Optional
+from typing import Optional
 
 from openai import OpenAI
 from dotenv import load_dotenv
 
-from x_thread_extractor.models import Thread, ThreadLearnings
+from src.models import Thread, ThreadLearnings
 
 # Load environment variables
 load_dotenv()

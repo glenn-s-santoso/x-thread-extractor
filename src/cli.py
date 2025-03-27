@@ -7,7 +7,7 @@ from typing import Optional
 import click
 from dotenv import load_dotenv
 
-from x_thread_extractor.extractor import extract_and_analyze, save_to_json
+from src.extractor import extract_and_analyze, save_to_json
 
 # Load environment variables
 load_dotenv()
