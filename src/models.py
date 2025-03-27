@@ -1,10 +1,9 @@
 """Data models for X Thread Extractor."""
 
 from datetime import datetime
-import re
 from typing import Dict, List, Optional, Any
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field
 
 
 class PublicMetrics(BaseModel):
@@ -31,13 +30,6 @@ class Tweet(BaseModel):
     public_metrics: Optional[PublicMetrics] = None
     edit_history_tweet_ids: Optional[List[str]] = None
     
-    @root_validator(pre=True)
-    def parse_dates(cls, values: Dict[str, Any]) -> Dict[str, Any]:
-        """Parse date strings to datetime objects."""
-        if isinstance(values.get("created_at"), str):
-            values["created_at"] = datetime.fromisoformat(values["created_at"].replace("Z", "+00:00"))
-        return values
-    
     @property
     def is_reply_to_other_user(self) -> bool:
         """Check if the tweet is a reply to another user (not the author)."""
@@ -55,34 +47,6 @@ class Tweet(BaseModel):
                     return ref.get("id")
         return None
     
-    @property
-    def thread_position(self) -> Optional[int]:
-        """Extract the thread position from the tweet text if available.
-        
-        Many X threads use a numbering system like "/0", "/1", etc. at the end of tweets.
-        This method extracts that number to determine the tweet's position in the thread.
-        
-        Returns:
-            The position number if found, None otherwise.
-        """
-        # Look for patterns like "/0", "/1", etc. at the end of the text
-        match = re.search(r'\/(\d+)\s*$', self.text)
-        if match:
-            return int(match.group(1))
-        
-        # Also check for other common formats like "(1/10)", "1.", etc.
-        match = re.search(r'(\d+)\/\d+\s*$', self.text)
-        if match:
-            return int(match.group(1)) - 1  # Convert to 0-indexed
-            
-        # Check for numbered bullet points
-        match = re.search(r'^(\d+)[\.)\]]', self.text)
-        if match:
-            return int(match.group(1)) - 1  # Convert to 0-indexed
-            
-        return None
-
-
 class User(BaseModel):
     """Model representing a user on X."""
 
