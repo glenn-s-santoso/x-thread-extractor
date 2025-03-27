@@ -9,6 +9,35 @@ A command-line tool to extract main threads from X (Twitter) conversations witho
 - Generate key learnings from the thread using an LLM (via OpenRouter)
 - Export results to JSON
 
+## How It Works
+
+```mermaid
+flowchart TD
+    A[CLI Input: Tweet ID] --> B[API Client]
+    B -->|Fetch Original Tweet| C[Get Conversation ID]
+    C -->|Fetch All Tweets| D[Get Conversation Tweets]
+    D --> E[Thread Builder]
+    E -->|Filter Author Tweets| F[Filter: Only Author's Tweets]
+    F -->|Filter Replies| G[Filter: Remove Replies to Others]
+    G -->|Build Thread| H[Extract Main Thread]
+    H -->|Optional| I[Generate Learnings with LLM]
+    H --> J[Format Output]
+    I --> J
+    J --> K[Export to JSON]
+
+    subgraph "Thread Building Logic"
+        F
+        G
+        H
+    end
+
+    subgraph "API Interaction"
+        B
+        C
+        D
+    end
+```
+
 ## Installation
 
 ### Using Poetry (recommended)
@@ -65,4 +94,3 @@ extract --tweet-id <tweet_id> --no-learnings --output thread_output.json
 
 # Get help
 extract --help
-```
